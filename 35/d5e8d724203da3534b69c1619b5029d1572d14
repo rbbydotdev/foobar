@@ -1,0 +1,26 @@
+src/editor/ai-autocomplete/prompts.ts
+  s_0c3d19a4546f2b::t_6693141ed26d43 23
+src/anomaly/detect.ts
+  s_0c3d19a4546f2b::t_15b7242810a305 178
+  s_0c3d19a4546f2b::t_bb99b5e8b9eb87 91
+  s_0c3d19a4546f2b::t_8855babc70fbf5 149
+  s_0c3d19a4546f2b::t_f3565499476cc6 120
+  s_0c3d19a4546f2b::t_15f68040ee700f 266
+  s_0c3d19a4546f2b::t_53a419ec5a77ac 209
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "35d5e8d724203da3534b69c1619b5029d1572d14",
+  "prompts": {},
+  "sessions": {
+    "s_0c3d19a4546f2b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f610e517-a70e-4221-b0a9-7d6370928669",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Robert Polana <robertapolana@gmail.com>"
+    }
+  }
+}
