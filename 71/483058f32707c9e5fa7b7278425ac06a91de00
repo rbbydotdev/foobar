@@ -1,0 +1,50 @@
+src/providers/components/ProviderManagerDialog.tsx
+  s_0c3d19a4546f2b::t_0f44d039b8af99 1-176
+src/providers/components/ProviderForm.tsx
+  s_0c3d19a4546f2b::t_e270fa4d006ab4 1-93
+src/App.tsx
+  s_0c3d19a4546f2b::t_db7cf62bf54f8d 6-7
+  s_0c3d19a4546f2b::t_a1dca8479779a3 23-24
+  s_0c3d19a4546f2b::t_faea493a7d78f4 41,57
+src/providers/components/ModelCombobox.tsx
+  s_0c3d19a4546f2b::t_9766efce4729f8 1-106
+package.json
+  s_0c3d19a4546f2b::t_aed5aeb31339ab 34,39
+src/main.tsx
+  s_0c3d19a4546f2b::t_25df424bc12cc5 5
+  s_0c3d19a4546f2b::t_c4ef4c7a1e7f2a 20
+src/providers/useImportSharedProvider.ts
+  s_0c3d19a4546f2b::t_90a9aed2ba391f 1-30
+src/providers/use-models.ts
+  s_0c3d19a4546f2b::t_84aadf26e41208 1-47
+src/providers/openrouter-models.ts
+  s_0c3d19a4546f2b::t_94388ae2945a57 1-53
+src/providers/components/AiSettings.tsx
+  s_0c3d19a4546f2b::t_569057ec01217c 1-169
+src/providers/share.ts
+  s_0c3d19a4546f2b::t_024fb2813f6f5e 1-56
+src/providers/components/ProviderSelector.tsx
+  s_0c3d19a4546f2b::t_b535b2b9c6f51c 1-102
+src/providers/store.ts
+  s_0c3d19a4546f2b::t_c45886be351dd2 1-112
+src/providers/types.ts
+  s_0c3d19a4546f2b::t_134ffd6b61d7f6 1-18
+src/components/ui/sonner.tsx
+  s_0c3d19a4546f2b::t_aed5aeb31339ab 1-47
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "71483058f32707c9e5fa7b7278425ac06a91de00",
+  "prompts": {},
+  "sessions": {
+    "s_0c3d19a4546f2b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f610e517-a70e-4221-b0a9-7d6370928669",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Robert Polana <robertapolana@gmail.com>"
+    }
+  }
+}
