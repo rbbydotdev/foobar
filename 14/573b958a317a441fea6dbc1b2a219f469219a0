@@ -1,0 +1,35 @@
+src/db/schema.ts
+  s_0c3d19a4546f2b::t_cb88129a3849ec 1-32
+src/db/sqlite.ts
+  s_0c3d19a4546f2b::t_9bf0665042f368 1-120
+src/db/seed.ts
+  s_0c3d19a4546f2b::t_594971fdff822a 1-233
+src/App.tsx
+  s_0c3d19a4546f2b::t_7c764a62e4e20a 1-5,7-32,42-51,53-104
+src/db/index.ts
+  s_0c3d19a4546f2b::t_a35eb45049048d 1-16
+src/db/introspect.ts
+  s_0c3d19a4546f2b::t_ed2e83d47f1583 1-33
+src/db/store.ts
+  s_0c3d19a4546f2b::t_6738343a39b40e 1-60
+src/db/types.ts
+  s_0c3d19a4546f2b::t_9051c203858b36 1-27
+src/db/persistence.ts
+  s_0c3d19a4546f2b::t_33340d36a96351 1-86
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "14573b958a317a441fea6dbc1b2a219f469219a0",
+  "prompts": {},
+  "sessions": {
+    "s_0c3d19a4546f2b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f610e517-a70e-4221-b0a9-7d6370928669",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Robert Polana <robertapolana@gmail.com>"
+    }
+  }
+}
