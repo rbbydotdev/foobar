@@ -20,7 +20,7 @@ Rules:
 
 function datasetNotes(hints: string[]): string {
   if (hints.length === 0) return ''
-  return `\n\nDataset notes (the user is likely investigating these — bias completions toward relevant queries):\n${hints.map((h) => `- ${h}`).join('\n')}`
+  return `\n\nAnomalies in the data (the user may be querying these):\n${hints.map((h) => `- ${h}`).join('\n')}`
 }
 
 export function buildCompletionPrompt(

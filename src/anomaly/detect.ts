@@ -88,7 +88,7 @@ function detectErrorSpike(): DataAnomaly | null {
     kind: 'error-spike',
     title: `5xx spike on ${path}`,
     summary: `${errors} server errors (${rate}% of ${total}) — a statistical outlier vs other endpoints (median ${hit.median}).`,
-    hint: `Server errors (5xx) are concentrated on ${path}: ${errors} errors, ${rate}% error rate — a statistical outlier versus other endpoints. The user is likely investigating server errors by endpoint, status code, or time bucket.`,
+    hint: `elevated 5xx server errors on path '${path}' (status >= 500)`,
     metrics: { path, errors, total, error_rate_pct: rate },
     sample: { columns: sample.columns, rows: sample.rows },
   }
@@ -117,7 +117,7 @@ function detectLatency(): DataAnomaly | null {
     kind: 'latency',
     title: `Latency outlier on ${path}`,
     summary: `Average ${avg}ms (max ${max}ms) vs a ~${hit.median}ms median across endpoints.`,
-    hint: `Requests to ${path} are unusually slow: average ${avg}ms versus a ~${hit.median}ms median across endpoints — a latency outlier. The user is likely querying slow requests, average/percentile latency, or the slowest endpoints.`,
+    hint: `unusually high duration_ms on path '${path}'`,
     metrics: { path, avg_ms: avg, max_ms: max, median_avg_ms: hit.median },
     sample: { columns: sample.columns, rows: sample.rows },
   }
@@ -146,7 +146,7 @@ function detectIpFlood(): DataAnomaly | null {
     kind: 'ip-flood',
     title: `Abusive IP ${ip}`,
     summary: `${total} requests from one IP vs a ~${hit.median} per-IP median${limited ? `, with ${limited} rate-limited (429)` : ''}.`,
-    hint: `A single IP (${ip}) is responsible for an outlier number of requests (${total}, far above the ~${hit.median} per-IP median)${limited ? `, including ${limited} rate-limited (429) responses` : ''}. The user is likely querying top IPs by request count or rate-limited (429) traffic.`,
+    hint: `ip '${ip}' has an outlier request volume${limited ? ' with many status=429' : ''}`,
     metrics: { ip, requests: total, rate_limited: limited, median_per_ip: hit.median },
     sample: { columns: sample.columns, rows: sample.rows },
   }
@@ -175,7 +175,7 @@ function detectAuthFailures(): DataAnomaly | null {
     kind: 'auth-failures',
     title: `Auth failure burst on ${path}`,
     summary: `${unauth} of ${total} requests returned 401 — a statistical outlier (median ${hit.median}).`,
-    hint: `There is a burst of 401 Unauthorized responses concentrated on ${path} (${unauth} of ${total}), a statistical outlier suggesting failed logins or brute force. The user is likely querying failed auth attempts grouped by IP or over time.`,
+    hint: `spike of status=401 (auth failures) on path '${path}'`,
     metrics: { path, unauthorized: unauth, total },
     sample: { columns: sample.columns, rows: sample.rows },
   }
@@ -206,7 +206,7 @@ function detectNotFoundScan(): DataAnomaly | null {
     kind: 'notfound-scan',
     title: `404 path scan from ${ip}`,
     summary: `${notfound} 404s across ${paths} distinct paths from one IP — consistent with scanning.`,
-    hint: `A single IP (${ip}) produced an outlier number of 404s (${notfound}) across ${paths} distinct paths — consistent with path scanning. The user is likely querying 404 responses by path or by IP.`,
+    hint: `ip '${ip}' produced many status=404 across ${paths} distinct paths (scanning)`,
     metrics: { ip, notfound, distinct_paths: paths },
     sample: { columns: sample.columns, rows: sample.rows },
   }
@@ -263,7 +263,7 @@ function detectBenford(): DataAnomaly | null {
     kind: 'benford',
     title: 'Response sizes deviate from Benford’s Law',
     summary: `Leading-digit χ² = ${chi} for bytes (≫ the ~20 significance bar) — leading digit ${worstDigit} is the most off. Suggests synthetic or manipulated response sizes.`,
-    hint: `The leading-digit distribution of the bytes column deviates from Benford's Law (chi-square ${chi}), which suggests synthetic or manipulated response sizes rather than naturally-occurring traffic. The user may want to inspect the distribution of bytes — e.g. group by leading digit or by size buckets.`,
+    hint: `anomalous value distribution in the bytes column`,
     metrics: { chi_square: chi, samples: total, most_anomalous_digit: worstDigit },
     sample: { columns: ['leading_digit', 'observed_pct', 'benford_pct'], rows: sampleRows },
   }
