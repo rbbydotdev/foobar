@@ -1,0 +1,26 @@
+src/anomaly/AnomalyWatcher.tsx
+  s_0c3d19a4546f2b::t_9a019a8075034b 1-201
+src/anomaly/detect.ts
+  s_0c3d19a4546f2b::t_4818eae090e559 1-83
+src/anomaly/analyze.ts
+  s_0c3d19a4546f2b::t_5a9022a215741c 1-48
+src/App.tsx
+  s_0c3d19a4546f2b::t_847c6b1c76061e 8
+  s_0c3d19a4546f2b::t_6e3361d2480dbb 60
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "c2b8ecea9eae9efa32376aa41af7890ba6101b54",
+  "prompts": {},
+  "sessions": {
+    "s_0c3d19a4546f2b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f610e517-a70e-4221-b0a9-7d6370928669",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Robert Polana <robertapolana@gmail.com>"
+    }
+  }
+}
