@@ -3,6 +3,7 @@ import { SAMPLE_QUERY, useDb } from '@/db'
 import { useSqlRunner } from '@/query/useSqlRunner'
 import { ResultsTable } from '@/query/ResultsTable'
 import { SqlEditor } from '@/editor/SqlEditor'
+import { useAiAutocompleteExtension } from '@/editor/useAiAutocompleteExtension'
 import { AiSettings } from '@/providers/components/AiSettings'
 import { useImportSharedProvider } from '@/providers/useImportSharedProvider'
 import { Button } from '@/components/ui/button'
@@ -19,6 +20,7 @@ export default function App() {
 
   const [sql, setSql] = useState(SAMPLE_QUERY)
   const runner = useSqlRunner(sql)
+  const aiExtension = useAiAutocompleteExtension()
 
   useImportSharedProvider()
 
@@ -72,6 +74,7 @@ export default function App() {
               onChange={setSql}
               onRun={runner.runExplicit}
               schema={schema}
+              aiExtension={aiExtension}
             />
           </div>
           <div className="flex items-center justify-between text-xs text-muted-foreground">
