@@ -1,0 +1,29 @@
+src/index.css
+  s_0c3d19a4546f2b::t_56f89681fd34a6 217-234
+src/editor/ai-autocomplete/codemirror.ts
+  s_0c3d19a4546f2b::t_7269ac30a8a139 249-253,257-275
+  s_0c3d19a4546f2b::t_051ac5c146d1d8 654-658,669-670,686-689
+  s_0c3d19a4546f2b::t_5770c704d12bc9 81
+  s_0c3d19a4546f2b::t_3ee77aef171831 701-703
+  s_0c3d19a4546f2b::t_cfb97b63ff3f2d 188-193,197-227
+  s_0c3d19a4546f2b::t_f19533dad7b180 124-125
+  s_0c3d19a4546f2b::t_e4778b5568aabd 405,424-425
+  s_0c3d19a4546f2b::t_7fae8c5a684aeb 628-630
+  s_0c3d19a4546f2b::t_7b298309915e3b 148,159-160,168-171
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "6444b8696e3a5dbc9fe8e6e96f7231807720c073",
+  "prompts": {},
+  "sessions": {
+    "s_0c3d19a4546f2b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f610e517-a70e-4221-b0a9-7d6370928669",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Robert Polana <robertapolana@gmail.com>"
+    }
+  }
+}
