@@ -15,6 +15,8 @@ interface DbStore {
   init: () => Promise<void>
   reset: (count: number) => Promise<void>
   seedMore: (count: number) => Promise<void>
+  /** Call after an imperative write so dependent queries refetch. */
+  markChanged: () => void
 }
 
 export const useDb = create<DbStore>((set, get) => ({
@@ -57,4 +59,20 @@ export const useDb = create<DbStore>((set, get) => ({
       set({ busy: false })
     }
   },
+  markChanged: () =>
+    set((s) => {
+      let rowCount = s.rowCount
+      let schema = s.schema
+      try {
+        rowCount = db.getRowCount()
+      } catch {
+        rowCount = 0
+      }
+      try {
+        schema = db.getSchema()
+      } catch {
+        // table list unavailable (e.g. requests dropped); keep previous
+      }
+      return { dataVersion: s.dataVersion + 1, rowCount, schema }
+    }),
 }))
