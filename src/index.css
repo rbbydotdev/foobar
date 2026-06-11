@@ -215,3 +215,21 @@
   color: var(--cm-ghost) !important;
   font-style: italic;
 }
+
+/* "Request in flight" spinner shown at the cursor. */
+@keyframes cm-ai-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.cm-ai-spinner {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: text-bottom;
+  margin-left: 1px;
+  color: var(--primary);
+  pointer-events: none;
+}
+.cm-ai-spinner svg {
+  animation: cm-ai-spin 0.7s linear infinite;
+}

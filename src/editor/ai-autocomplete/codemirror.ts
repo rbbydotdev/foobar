@@ -78,6 +78,7 @@ interface InlineState {
   readonly completion: ActiveInlineCompletion | null;
   readonly manualEdit: ManualEditState | null;
   readonly requestSerial: number;
+  readonly loading: number | null;
 }
 
 interface ManualEditState {
@@ -120,6 +121,8 @@ const requestInlineCompletionEffect = StateEffect.define<InlineAutocompleteTrigg
 const setInlineCompletionEffect = StateEffect.define<ActiveInlineCompletion | null>();
 const showManualEditEffect = StateEffect.define<ManualEditState | null>();
 const bumpRequestSerialEffect = StateEffect.define<number>();
+/** Doc position to show the "request in flight" spinner at, or null to hide. */
+const setLoadingEffect = StateEffect.define<number | null>();
 
 const aiAutocompleteConfig = Facet.define<AiAutocompleteExtensionOptions, AiAutocompleteConfig>({
   combine(values) {
@@ -142,7 +145,7 @@ const aiAutocompleteConfig = Facet.define<AiAutocompleteExtensionOptions, AiAuto
 
 const inlineStateField = StateField.define<InlineState>({
   create() {
-    return { completion: null, manualEdit: null, requestSerial: 0 };
+    return { completion: null, manualEdit: null, requestSerial: 0, loading: null };
   },
   update(value, tr) {
     let next = value;
@@ -153,6 +156,8 @@ const inlineStateField = StateField.define<InlineState>({
         next = { ...next, manualEdit: effect.value, completion: null };
       } else if (effect.is(bumpRequestSerialEffect)) {
         next = { ...next, requestSerial: effect.value };
+      } else if (effect.is(setLoadingEffect)) {
+        next = { ...next, loading: effect.value };
       }
     }
 
@@ -160,8 +165,10 @@ const inlineStateField = StateField.define<InlineState>({
       const manualEdit = next.manualEdit ? mapManualEdit(next.manualEdit, tr) : null;
       const keepCompletion = tr.annotation(aiAutocompleteAccepted)
         ? null
-        : keepCompletionForTransaction(next.completion, tr);
-      return { ...next, completion: keepCompletion, manualEdit };
+        : adaptCompletionToTyping(next.completion, tr);
+      // Any edit/cursor move ends the current request indicator; the plugin
+      // re-shows it if it actually fires a new network request.
+      return { ...next, completion: keepCompletion, manualEdit, loading: null };
     }
 
     return next;
@@ -178,13 +185,46 @@ function mapManualEdit(edit: ManualEditState, tr: Transaction): ManualEditState 
   return { ...edit, from, to, anchor };
 }
 
-function keepCompletionForTransaction(
+/**
+ * When the user types text that matches the start of the visible ghost text,
+ * keep the suggestion but trim the consumed prefix — no flicker, no new request.
+ * Any other edit clears the suggestion.
+ */
+function adaptCompletionToTyping(
   completion: ActiveInlineCompletion | null,
   tr: Transaction,
 ): ActiveInlineCompletion | null {
-  if (!completion) return null;
-  if (!tr.docChanged && !tr.selection) return completion;
-  return null;
+  if (!completion || !tr.docChanged) return null;
+  const selection = tr.state.selection.main;
+  if (!selection.empty) return null;
+
+  let changeCount = 0;
+  let changeFrom = -1;
+  let changeTo = -1;
+  let inserted = "";
+  tr.changes.iterChanges((fromA, toA, _fromB, _toB, ins) => {
+    changeCount++;
+    changeFrom = fromA;
+    changeTo = toA;
+    inserted = ins.toString();
+  });
+  if (changeCount !== 1) return null;
+  if (changeFrom !== changeTo) return null; // pure insertion only
+  if (changeFrom !== completion.range.from) return null; // typed at the ghost anchor
+  if (!inserted || !completion.displayText.startsWith(inserted)) return null;
+
+  const newPos = completion.range.from + inserted.length;
+  if (selection.head !== newPos) return null;
+
+  const remaining = completion.displayText.slice(inserted.length);
+  if (!remaining) return null; // fully typed out — nothing left to show
+
+  return {
+    ...completion,
+    item: { ...completion.item, insertText: remaining },
+    displayText: remaining,
+    range: { from: newPos, to: newPos },
+  };
 }
 
 function buildDecorations(value: InlineState): DecorationSet {
@@ -206,7 +246,33 @@ function buildDecorations(value: InlineState): DecorationSet {
       }).range(value.manualEdit.anchor),
     );
   }
+  if (value.loading != null) {
+    decorations.push(
+      Decoration.widget({ widget: new SpinnerWidget(), side: 1 }).range(value.loading),
+    );
+  }
   return Decoration.set(decorations, true);
+}
+
+const SPINNER_SVG =
+  '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>';
+
+class SpinnerWidget extends WidgetType {
+  eq(): boolean {
+    return true;
+  }
+
+  toDOM(): HTMLElement {
+    const span = document.createElement("span");
+    span.className = "cm-ai-spinner";
+    span.setAttribute("aria-label", "Asking the model…");
+    span.innerHTML = SPINNER_SVG;
+    return span;
+  }
+
+  ignoreEvent(): boolean {
+    return true;
+  }
 }
 
 class GhostTextWidget extends WidgetType {
@@ -336,6 +402,7 @@ async function requestInlineEdit(
   context: InlineEditContext,
   signal: AbortSignal,
 ): Promise<void> {
+  view.dispatch({ effects: setLoadingEffect.of(context.position.offset) });
   try {
     const raw = config.provider.provideInlineEdit
       ? await config.provider.provideInlineEdit(context, signal)
@@ -354,6 +421,8 @@ async function requestInlineEdit(
     view.focus();
   } catch (error) {
     if (!signal.aborted) config.onError?.(error, context);
+  } finally {
+    view.dispatch({ effects: setLoadingEffect.of(null) });
   }
 }
 
@@ -556,6 +625,9 @@ const aiAutocompletePlugin = ViewPlugin.fromClass(
         this.#abortController?.abort();
       }
       if (shouldTriggerAutomatic(update)) {
+        // If the suggestion survived this edit (the user typed into it), keep
+        // showing it — don't fire another request.
+        if (update.state.field(inlineStateField).completion) return;
         const config = update.state.facet(aiAutocompleteConfig);
         this.#schedule("automatic", config.debounceMs);
       }
@@ -579,7 +651,11 @@ const aiAutocompletePlugin = ViewPlugin.fromClass(
       const serial = ++this.#serial;
       const context = buildInlineCompletionContext(view.state, config, trigger, serial);
       view.dispatch({
-        effects: [bumpRequestSerialEffect.of(serial), setInlineCompletionEffect.of(null)],
+        effects: [
+          bumpRequestSerialEffect.of(serial),
+          setInlineCompletionEffect.of(null),
+          setLoadingEffect.of(null),
+        ],
       });
 
       const cached = this.#cache.get(context);
@@ -590,6 +666,8 @@ const aiAutocompletePlugin = ViewPlugin.fromClass(
         return;
       }
 
+      // Genuine network request → show the spinner at the cursor.
+      view.dispatch({ effects: setLoadingEffect.of(context.position.offset) });
       config.onRequestStart?.(context);
       try {
         const raw = await config.provider.provideInlineCompletions(context, abortController.signal);
@@ -605,6 +683,10 @@ const aiAutocompletePlugin = ViewPlugin.fromClass(
         this.#showCompletion(serial, completion, context);
       } catch (error) {
         if (!abortController.signal.aborted) config.onError?.(error, context);
+      } finally {
+        if (serial === this.#serial) {
+          view.dispatch({ effects: setLoadingEffect.of(null) });
+        }
       }
     }
 
@@ -616,7 +698,9 @@ const aiAutocompletePlugin = ViewPlugin.fromClass(
       if (serial !== this.#serial) return;
       const active = this.view.state.field(inlineStateField).requestSerial;
       if (active !== serial) return;
-      this.view.dispatch({ effects: setInlineCompletionEffect.of(completion) });
+      this.view.dispatch({
+        effects: [setInlineCompletionEffect.of(completion), setLoadingEffect.of(null)],
+      });
       this.view.state.facet(aiAutocompleteConfig).onShown?.({ completion: completion.item, context });
     }
 
