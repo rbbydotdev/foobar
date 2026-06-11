@@ -7,9 +7,6 @@ export interface ProviderRecord {
   createdAt: number
 }
 
-/** Whether anomalous rows get sent to the model for explanation. */
-export type AnomalyMode = 'off' | 'manual' | 'auto'
-
 /** Shareable subset encoded into the ?provider= link. */
 export interface SharePayload {
   label: string

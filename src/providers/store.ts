@@ -1,14 +1,13 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { nanoid } from 'nanoid'
-import type { AnomalyMode, ProviderRecord } from './types'
+import type { ProviderRecord } from './types'
 
 interface ProvidersState {
   providers: ProviderRecord[]
   activeProviderId: string | null
   autocompleteEnabled: boolean
   debounceMs: number
-  anomalyMode: AnomalyMode
 
   addProvider: (input: { label: string; apiKey: string; model: string }) => ProviderRecord
   updateProvider: (
@@ -21,7 +20,6 @@ interface ProvidersState {
   setActiveModel: (model: string) => void
   setAutocompleteEnabled: (enabled: boolean) => void
   setDebounceMs: (ms: number) => void
-  setAnomalyMode: (mode: AnomalyMode) => void
   /** Add a shared provider unless an identical one (key+model) already exists. */
   importSharedProvider: (input: {
     label: string
@@ -37,7 +35,6 @@ export const useProviders = create<ProvidersState>()(
       activeProviderId: null,
       autocompleteEnabled: false,
       debounceMs: 350,
-      anomalyMode: 'off',
 
       addProvider: ({ label, apiKey, model }) => {
         const record: ProviderRecord = {
@@ -78,7 +75,6 @@ export const useProviders = create<ProvidersState>()(
 
       setAutocompleteEnabled: (autocompleteEnabled) => set({ autocompleteEnabled }),
       setDebounceMs: (debounceMs) => set({ debounceMs }),
-      setAnomalyMode: (anomalyMode) => set({ anomalyMode }),
 
       importSharedProvider: ({ label, apiKey, model }) => {
         const existing = get().providers.find(

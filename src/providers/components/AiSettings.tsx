@@ -6,34 +6,18 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import { cn } from '@/lib/utils'
 import { useActiveProvider, useProviders } from '../store'
-import type { AnomalyMode } from '../types'
 import { buildShareLink } from '../share'
 import { ProviderSelector } from './ProviderSelector'
 import { ModelCombobox } from './ModelCombobox'
 import { ProviderManagerDialog } from './ProviderManagerDialog'
-
-const ANOMALY_LABELS: Record<AnomalyMode, string> = {
-  off: 'Off',
-  manual: 'Manual — button',
-  auto: 'Auto — after each query',
-}
 
 export function AiSettings() {
   const enabled = useProviders((s) => s.autocompleteEnabled)
   const setEnabled = useProviders((s) => s.setAutocompleteEnabled)
   const debounceMs = useProviders((s) => s.debounceMs)
   const setDebounceMs = useProviders((s) => s.setDebounceMs)
-  const anomalyMode = useProviders((s) => s.anomalyMode)
-  const setAnomalyMode = useProviders((s) => s.setAnomalyMode)
   const setActiveModel = useProviders((s) => s.setActiveModel)
   const active = useActiveProvider()
 
@@ -126,27 +110,6 @@ export function AiSettings() {
                 />
                 <span className="text-xs text-muted-foreground">ms</span>
               </div>
-            </div>
-
-            <div className="flex flex-col gap-1.5">
-              <Label className="text-xs text-muted-foreground">
-                Anomaly detection
-                <span className="ml-1 font-normal text-muted-foreground/70">
-                  (sends flagged rows to the model)
-                </span>
-              </Label>
-              <Select value={anomalyMode} onValueChange={(v) => setAnomalyMode(v as AnomalyMode)}>
-                <SelectTrigger size="sm" className="w-full">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {(Object.keys(ANOMALY_LABELS) as AnomalyMode[]).map((mode) => (
-                    <SelectItem key={mode} value={mode}>
-                      {ANOMALY_LABELS[mode]}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
             </div>
 
             <Button

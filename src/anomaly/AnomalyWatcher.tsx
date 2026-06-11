@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Loader2, Sparkles, TriangleAlert } from 'lucide-react'
 import { useDb } from '@/db'
-import { useActiveProvider, useProviders } from '@/providers/store'
+import { useActiveProvider } from '@/providers/store'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import {
@@ -23,7 +23,6 @@ interface AnalysisState {
 }
 
 export function AnomalyWatcher() {
-  const mode = useProviders((s) => s.anomalyMode)
   const active = useActiveProvider()
   const dbStatus = useDb((s) => s.status)
   const dataVersion = useDb((s) => s.dataVersion)
@@ -39,7 +38,7 @@ export function AnomalyWatcher() {
 
   // Re-detect whenever the dataset changes (and clear prior analyses).
   useEffect(() => {
-    if (mode === 'off' || dbStatus !== 'ready') {
+    if (dbStatus !== 'ready') {
       setAnomalies([])
       return
     }
@@ -50,7 +49,7 @@ export function AnomalyWatcher() {
     }
     setAnalyses({})
     autoRanRef.current = new Set()
-  }, [mode, dbStatus, dataVersion])
+  }, [dbStatus, dataVersion])
 
   const runAnalysis = useCallback(
     async (anomaly: DataAnomaly) => {
@@ -78,17 +77,15 @@ export function AnomalyWatcher() {
     [apiKey, model, schema],
   )
 
-  // Auto mode: analyze each new anomaly once.
+  // Auto-analyze each newly-detected anomaly once (when a provider is set).
   useEffect(() => {
-    if (mode !== 'auto' || !apiKey || !model) return
+    if (!apiKey || !model) return
     for (const anomaly of anomalies) {
       if (autoRanRef.current.has(anomaly.signature)) continue
       autoRanRef.current.add(anomaly.signature)
       void runAnalysis(anomaly)
     }
-  }, [mode, anomalies, apiKey, model, runAnalysis])
-
-  if (mode === 'off') return null
+  }, [anomalies, apiKey, model, runAnalysis])
 
   const count = anomalies.length
 
@@ -111,10 +108,9 @@ export function AnomalyWatcher() {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-h-[85vh] max-w-2xl overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Anomaly detection</DialogTitle>
+            <DialogTitle>Anomaly analysis</DialogTitle>
             <DialogDescription>
-              5xx error spikes in the current dataset.{' '}
-              {mode === 'auto' ? 'Auto-analyzed with the active model.' : 'Analyze on demand.'}
+              Anomalies found in the current data, auto-analyzed with the active model.
             </DialogDescription>
           </DialogHeader>
 
