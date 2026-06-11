@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query'
-import { persist, query, useDb } from '@/db'
+import { cleanSqlMessage, persist, query, useDb } from '@/db'
 import type { QueryResult } from '@/db'
 import { useDebouncedValue } from '@/lib/use-debounced-value'
 import { classifyStatement } from './classify'
@@ -64,7 +64,10 @@ export function useSqlRunner(sql: string, debounceMs = 300): SqlRunnerState {
         void persist()
         markChanged()
       } catch (e) {
-        setWriteState({ result: null, error: e instanceof Error ? e.message : String(e) })
+        setWriteState({
+          result: null,
+          error: cleanSqlMessage(e instanceof Error ? e.message : String(e)),
+        })
       }
       return
     }
@@ -86,7 +89,7 @@ export function useSqlRunner(sql: string, debounceMs = 300): SqlRunnerState {
 
   return {
     result: readQuery.data ?? null,
-    error: readQuery.error ? (readQuery.error as Error).message : null,
+    error: readQuery.error ? cleanSqlMessage((readQuery.error as Error).message) : null,
     isFetching: readQuery.isFetching,
     kind,
     runExplicit,

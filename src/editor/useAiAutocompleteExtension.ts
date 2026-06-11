@@ -34,6 +34,8 @@ export function useAiAutocompleteExtension(): Extension | undefined {
       debounceMs,
       maxPrefixChars: 2000,
       maxSuffixChars: 800,
+      // ⇧⌘I opens the "ask AI to write/edit SQL" instruction popover.
+      manualEditKey: 'Mod-Shift-i',
       onError: (error) => console.warn('[ai-autocomplete]', error),
     })
   }, [enabled, apiKey, model, providerId, debounceMs])

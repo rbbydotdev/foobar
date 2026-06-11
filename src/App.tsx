@@ -7,7 +7,7 @@ import { SqlEditor } from '@/editor/SqlEditor'
 import { useAiAutocompleteExtension } from '@/editor/useAiAutocompleteExtension'
 import { AiSettings } from '@/providers/components/AiSettings'
 import { AnomalyWatcher } from '@/anomaly/AnomalyWatcher'
-import { useImportSharedProvider } from '@/providers/useImportSharedProvider'
+import { SharedProviderImporter } from '@/providers/components/SharedProviderImporter'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
@@ -75,8 +75,6 @@ export default function App() {
   const runner = useSqlRunner(sql)
   const aiExtension = useAiAutocompleteExtension()
 
-  useImportSharedProvider()
-
   useEffect(() => {
     void init()
   }, [init])
@@ -85,6 +83,7 @@ export default function App() {
 
   return (
     <div className="app-surface flex h-svh flex-col text-foreground">
+      <SharedProviderImporter />
       <header className="flex items-center justify-between gap-3 border-b border-border/80 bg-card/50 px-4 py-2 backdrop-blur">
         <div className="flex items-center gap-2.5">
           <div className="flex size-7 items-center justify-center rounded-md border border-primary/30 bg-primary/15 text-primary">
@@ -203,7 +202,7 @@ export default function App() {
           <Kbd>Tab</Kbd> accept AI ghost text
         </span>
         <span className="flex items-center gap-1.5">
-          <Kbd>⌘I</Kbd> ask AI to edit
+          <Kbd>⇧⌘I</Kbd> ask AI to write / edit SQL
         </span>
         <span className="hidden sm:inline">·</span>
         <span className="hidden sm:inline">all data is local — SQLite WASM in your browser</span>

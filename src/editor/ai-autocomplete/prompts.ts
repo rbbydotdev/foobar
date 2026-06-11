@@ -8,12 +8,14 @@ export function schemaText(schema: TableSchema[]): string {
 }
 
 const COMPLETION_SYSTEM = `You are an inline autocomplete engine for SQLite SQL inside a query editor.
-Complete the statement at the <CURSOR> marker. Output ONLY the raw text to insert at the cursor.
+Continue the statement at the <CURSOR> marker, completing it as fully as is useful — finish the
+current clause and, when it makes sense, the rest of the statement, across multiple lines.
+Output ONLY the raw text to insert at the cursor.
 Rules:
 - No explanations, no markdown, no code fences, no backticks.
-- Continue the existing statement naturally (finish the current clause or expression).
+- Do not repeat any text that already appears before the cursor.
 - Use only the tables and columns in the provided schema.
-- Keep it short — usually the rest of the current clause, not the whole query.
+- Prefer a complete, runnable statement over a tiny fragment.
 - If nothing useful should be inserted, output nothing.`
 
 export function buildCompletionPrompt(
@@ -28,8 +30,10 @@ ${context.prefix}<CURSOR>${context.suffix}`
   return { system: COMPLETION_SYSTEM, prompt }
 }
 
-const EDIT_SYSTEM = `You edit SQLite SQL. Apply the user's instruction and return ONLY the replacement SQL for the selected section.
-No markdown, no backticks, no commentary. Keep it valid SQLite using only the provided schema.`
+const EDIT_SYSTEM = `You are a SQL copilot for SQLite. Follow the user's instruction to write or edit SQL.
+Return ONLY the SQL that should replace the selected section (or be inserted at the cursor if nothing is selected).
+No markdown, no backticks, no commentary. When asked to write a query, produce a complete, runnable statement.
+Use only the tables and columns in the provided schema.`
 
 export function buildEditPrompt(
   context: InlineEditContext,

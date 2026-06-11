@@ -7,6 +7,8 @@ import { sql, SQLite } from '@codemirror/lang-sql'
 import type { TableSchema } from '@/db'
 import { sqlEditorTheme } from './theme'
 import { defaultTableName, schemaToNamespace } from './sql-completions'
+import { sqlLinter } from './sql-lint'
+import { sqlHover } from './sql-hover'
 
 const External = Annotation.define<boolean>()
 
@@ -47,8 +49,10 @@ export function SqlEditor({
   // Keep latest callbacks/props reachable from the stable mount effect.
   const onChangeRef = useRef(onChange)
   const onRunRef = useRef(onRun)
+  const schemaRef = useRef(schema)
   onChangeRef.current = onChange
   onRunRef.current = onRun
+  schemaRef.current = schema
 
   // Mount the editor exactly once.
   useEffect(() => {
@@ -65,6 +69,8 @@ export function SqlEditor({
           cmPlaceholder(placeholder),
           sqlCompartment.of(buildSqlExtension(schema)),
           aiCompartment.of(aiExtension ?? []),
+          sqlLinter(),
+          sqlHover(() => schemaRef.current),
           sqlEditorTheme,
           Prec.highest(
             keymap.of([

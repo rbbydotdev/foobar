@@ -89,6 +89,73 @@ export function run(sql: string): void {
   requireDb().exec(sql)
 }
 
+export interface SqlDiagnostic {
+  from: number
+  to: number
+  severity: 'error' | 'warning'
+  message: string
+}
+
+/** Strips SQLite's internal "SQLITE_ERROR: sqlite3 result code N:" prefix. */
+export function cleanSqlMessage(message: string): string {
+  return message
+    .replace(/^SQLITE_[A-Z]+:\s*/, '')
+    .replace(/^sqlite3 result code \d+:\s*/, '')
+}
+
+function rangeFromMessage(text: string, message: string): { from: number; to: number } | null {
+  const near = /near "([^"]+)"/.exec(message)
+  if (near) {
+    const idx = text.indexOf(near[1])
+    if (idx >= 0) return { from: idx, to: idx + near[1].length }
+  }
+  const noSuch = /no such (?:column|table|function|module): ([A-Za-z0-9_.]+)/.exec(message)
+  if (noSuch) {
+    const name = noSuch[1].split('.').pop() ?? noSuch[1]
+    const idx = text.indexOf(name)
+    if (idx >= 0) return { from: idx, to: idx + name.length }
+  }
+  return null
+}
+
+/**
+ * Validates SQL against the real SQLite engine by compiling it with prepare()
+ * (no execution). Returns a diagnostic with a precise range for syntax errors,
+ * unknown tables/columns/functions, etc. "Incomplete input" (mid-typing) is
+ * intentionally ignored so the editor doesn't flag every partial keystroke.
+ */
+export function validateSql(text: string): SqlDiagnostic[] {
+  if (!db || !sqlite3) return []
+  if (!text.trim()) return []
+
+  let stmt: ReturnType<Database['prepare']> | undefined
+  try {
+    stmt = db.prepare(text)
+    return []
+  } catch (err) {
+    const message = cleanSqlMessage(err instanceof Error ? err.message : String(err))
+    if (/incomplete input/i.test(message)) return []
+
+    const rawOffset = sqlite3.capi.sqlite3_error_offset(db)
+    const offset = typeof rawOffset === 'number' ? rawOffset : -1
+
+    let range: { from: number; to: number } | null = null
+    if (offset >= 0 && offset <= text.length) {
+      const token = /^[A-Za-z0-9_$]+/.exec(text.slice(offset))
+      range = { from: offset, to: offset + (token ? token[0].length : 1) }
+    }
+    range ??= rangeFromMessage(text, message)
+    if (!range) {
+      const from = text.length - text.trimStart().length
+      range = { from, to: Math.max(from + 1, text.trimEnd().length) }
+    }
+
+    return [{ ...range, severity: 'error', message }]
+  } finally {
+    stmt?.finalize()
+  }
+}
+
 export function getRowCount(): number {
   return Number(requireDb().selectValue('SELECT count(*) FROM requests') ?? 0)
 }

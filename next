@@ -1,0 +1,28 @@
+
+we should use the red squiggly errors shown underlining for bad syntax 
+we do this error surfacing in ../gnata-proj (most certainly) as well as in .../job (I THINK?)
+
+we have hover over errors i believe too, its a very rich interfaces,
+
+there is a bug though i remember when the squigglies takes some finessing in css? i think to get to look right so check for that,
+
+and i think theres hover over error explainers as well?
+
+
+also the ai provider needs to be stored in local storage so it survives reload, 
+
+also when you follow the link and get that nice hook up to the open router token, 
+
+turn on the ai auto complete auto matically, and of course save the key,
+
+also if the api IS already stored, dont over write in on inbound link with creds, ifs a different api KEY ask the user in a popup/modal from shadcn if they want to overwrite with the new key
+
+also the ghost api auto complete looks like its only filling in simple single chars,
+i want whole statements, unless this is some type of bug? i know codemirror is particular about the edit field not explicitly expanding to full size unless you enter in actual newlines (i doubt this is the case but as last resort could be the issue)
+
+
+also .../jjjob and ../gnata-proj (MOST ESPECIALLY) is very good about auto complete and hover, for seeing fields, its all about exploration and rich editor experience here, do we need a special lsp for this? does gnata playground do so? thats what im talking about when i say gnata im talking about the awesome playground
+
+lets also make SHIFT+CMD+I open a copilot esque popup up where you can type to the ai agent to add to the prompt, so you can specify how you want it to autocomplete / write the sql for you - the real copilot experience
+
+use your react dev skill react design skill and codemirror skills

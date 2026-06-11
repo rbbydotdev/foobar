@@ -45,9 +45,9 @@ export function createOpenRouterCompletionProvider(
         prompt,
         abortSignal: signal,
         temperature: 0.1,
-        maxOutputTokens: 160,
+        maxOutputTokens: 400,
       })
-      return sanitize(result.text, 400) || null
+      return sanitize(result.text, 2000) || null
     },
 
     async provideInlineEdit(context, signal) {
