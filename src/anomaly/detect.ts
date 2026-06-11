@@ -289,7 +289,8 @@ export function detectAnomalies(): DataAnomaly[] {
       // a failing detector shouldn't break the rest
     }
   }
-  return found
+  // Benford detector is neutered for now — hidden from hints, UI, and analysis.
+  return found.filter((a) => a.kind !== 'benford')
 }
 
 // Cache the (non-trivial) detection per data version so the autocomplete can
