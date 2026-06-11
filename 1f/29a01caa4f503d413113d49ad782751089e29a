@@ -1,0 +1,39 @@
+src/anomaly/AnomalyPanel.tsx
+  s_0c3d19a4546f2b::t_c327721d6faef9 1-2,5-6,9-12,14-20,22-26,32,34,36,41-53,56-74,77-79,82-112
+src/editor/useAiAutocompleteExtension.ts
+  s_0c3d19a4546f2b::t_a7d91ba3f0c181 29-30
+  s_0c3d19a4546f2b::t_1548d0d70cb1e8 5-6
+src/App.tsx
+  s_0c3d19a4546f2b::t_d1d53ada0f137a 117
+  s_0c3d19a4546f2b::t_3f4ed8298562c4 10
+  s_0c3d19a4546f2b::t_9c15307538d55b 125
+src/anomaly/store.ts
+  s_0c3d19a4546f2b::t_1e5d785cfefcdb 5-7,10-11,14,17,19-21,31
+src/anomaly/AnomalyWatcher.tsx
+  s_0c3d19a4546f2b::t_5544821777e363 32
+  s_0c3d19a4546f2b::t_98f0f1dec994eb 16
+  s_0c3d19a4546f2b::t_dce169477ba9a2 56
+src/anomaly/detect.ts
+  s_0c3d19a4546f2b::t_8a435d60c0b10c 1,4-5,7,10-11,13,16-22,26-28,30-100,102-124,126-151,153,155-309
+src/anomaly/analyze.ts
+  s_0c3d19a4546f2b::t_105ea7aa0f31ea 4
+  s_0c3d19a4546f2b::t_99dc70bf880288 18
+src/anomaly/scenarios.ts
+  s_0c3d19a4546f2b::t_fd506f973d8915 1-2,10-14
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "1f29a01caa4f503d413113d49ad782751089e29a",
+  "prompts": {},
+  "sessions": {
+    "s_0c3d19a4546f2b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f610e517-a70e-4221-b0a9-7d6370928669",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Robert Polana <robertapolana@gmail.com>"
+    }
+  }
+}
