@@ -1,6 +1,6 @@
-import { createOpenRouter } from '@openrouter/ai-sdk-provider'
-import { generateText } from 'ai'
+import type { LanguageModel } from 'ai'
 import type { TableSchema } from '@/db'
+import { loadAiSdk } from '@/lib/ai-sdk'
 import type { InlineAutocompleteProvider } from './types'
 import { buildCompletionPrompt, buildEditPrompt } from './prompts'
 
@@ -25,13 +25,19 @@ function sanitize(raw: string, maxLen: number): string {
 export function createOpenRouterCompletionProvider(
   options: OpenRouterCompletionOptions,
 ): InlineAutocompleteProvider {
-  const client = createOpenRouter({ apiKey: options.apiKey })
-  const model = client.chat(options.model)
+  let modelRef: LanguageModel | null = null
+
+  async function resolve() {
+    const sdk = await loadAiSdk()
+    modelRef ??= sdk.createOpenRouter({ apiKey: options.apiKey }).chat(options.model)
+    return { generateText: sdk.generateText, model: modelRef }
+  }
 
   return {
     id: `openrouter:${options.model}`,
 
     async provideInlineCompletions(context, signal) {
+      const { generateText, model } = await resolve()
       const { system, prompt } = buildCompletionPrompt(context, options.getSchema())
       const result = await generateText({
         model,
@@ -45,6 +51,7 @@ export function createOpenRouterCompletionProvider(
     },
 
     async provideInlineEdit(context, signal) {
+      const { generateText, model } = await resolve()
       const { system, prompt } = buildEditPrompt(context, options.getSchema())
       const result = await generateText({
         model,

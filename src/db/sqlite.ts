@@ -1,7 +1,6 @@
 import sqlite3InitModule from '@sqlite.org/sqlite-wasm'
 import type { Database, Sqlite3Static } from '@sqlite.org/sqlite-wasm'
 import { DEFAULT_SEED_COUNT, SCHEMA_SQL } from './schema'
-import { seedRequests } from './seed'
 import { introspectSchema } from './introspect'
 import { clearSnapshot, loadSnapshot, saveSnapshot } from './persistence'
 import type { QueryResult, SqlValue, TableSchema } from './types'
@@ -18,6 +17,16 @@ export interface InitResult {
   restored: boolean
   seeded: boolean
   rowCount: number
+}
+
+// Faker is heavy and only needed when generating data, so load it on demand —
+// returning visitors restore from the IndexedDB snapshot and never pull it in.
+async function seed(
+  db: Database,
+  options: { count: number; append?: boolean },
+): Promise<number> {
+  const { seedRequests } = await import('./seed')
+  return seedRequests(db, options)
 }
 
 export async function initDatabase(): Promise<InitResult> {
@@ -37,7 +46,7 @@ export async function initDatabase(): Promise<InitResult> {
   }
 
   db.exec(SCHEMA_SQL)
-  seedRequests(db, { count: DEFAULT_SEED_COUNT })
+  await seed(db, { count: DEFAULT_SEED_COUNT })
   await persist()
   return { restored: false, seeded: true, rowCount: getRowCount() }
 }
@@ -100,13 +109,13 @@ export async function resetAndSeed(count: number): Promise<number> {
   const d = requireDb()
   d.exec('DROP TABLE IF EXISTS requests;')
   d.exec(SCHEMA_SQL)
-  seedRequests(d, { count })
+  await seed(d, { count })
   await persist()
   return getRowCount()
 }
 
 export async function seedMore(count: number): Promise<number> {
-  seedRequests(requireDb(), { count, append: true })
+  await seed(requireDb(), { count, append: true })
   await persist()
   return getRowCount()
 }

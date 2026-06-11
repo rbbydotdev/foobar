@@ -2,6 +2,7 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
+@import "@fontsource-variable/jetbrains-mono";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -131,7 +132,7 @@
 
 /* CodeMirror SQL syntax token colors (theme-aware via CSS variables). */
 :root {
-  --font-mono: ui-monospace, 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   --cm-keyword: oklch(0.5 0.21 280);
   --cm-string: oklch(0.55 0.16 150);
   --cm-number: oklch(0.6 0.18 45);
@@ -153,4 +154,64 @@
   --cm-property: oklch(0.8 0.12 185);
   --cm-type: oklch(0.78 0.12 220);
   --cm-ghost: oklch(0.62 0.03 265);
+}
+
+/* ── foobar identity: warm-amber "observability console", dark-first ── */
+:root {
+  --background: oklch(0.985 0.006 75);
+  --foreground: oklch(0.23 0.012 65);
+  --card: oklch(0.997 0.004 75);
+  --card-foreground: oklch(0.23 0.012 65);
+  --popover: oklch(0.997 0.004 75);
+  --popover-foreground: oklch(0.23 0.012 65);
+  --primary: oklch(0.62 0.16 55);
+  --primary-foreground: oklch(0.99 0.012 75);
+  --secondary: oklch(0.955 0.009 75);
+  --secondary-foreground: oklch(0.3 0.02 60);
+  --muted: oklch(0.955 0.009 75);
+  --muted-foreground: oklch(0.53 0.022 65);
+  --accent: oklch(0.94 0.024 70);
+  --accent-foreground: oklch(0.3 0.04 60);
+  --destructive: oklch(0.58 0.21 25);
+  --border: oklch(0.905 0.012 75);
+  --input: oklch(0.9 0.012 75);
+  --ring: oklch(0.62 0.16 55);
+  --radius: 0.5rem;
+}
+
+.dark {
+  --background: oklch(0.17 0.006 60);
+  --foreground: oklch(0.92 0.012 80);
+  --card: oklch(0.2 0.007 60);
+  --card-foreground: oklch(0.92 0.012 80);
+  --popover: oklch(0.205 0.007 60);
+  --popover-foreground: oklch(0.92 0.012 80);
+  --primary: oklch(0.8 0.14 70);
+  --primary-foreground: oklch(0.22 0.04 70);
+  --secondary: oklch(0.26 0.008 60);
+  --secondary-foreground: oklch(0.92 0.012 80);
+  --muted: oklch(0.25 0.007 60);
+  --muted-foreground: oklch(0.69 0.016 75);
+  --accent: oklch(0.285 0.016 70);
+  --accent-foreground: oklch(0.95 0.012 80);
+  --destructive: oklch(0.64 0.2 22);
+  --border: oklch(0.3 0.008 60);
+  --input: oklch(0.33 0.008 60);
+  --ring: oklch(0.8 0.14 70);
+}
+
+/* Dotted-grid surface for atmosphere; panels sit opaque on top. */
+.app-surface {
+  background-color: var(--background);
+  background-image: radial-gradient(
+    circle at 1px 1px,
+    color-mix(in oklch, var(--foreground) 6%, transparent) 1px,
+    transparent 0
+  );
+  background-size: 24px 24px;
+}
+
+.cm-editor .cm-ai-autocomplete-ghost {
+  color: var(--cm-ghost) !important;
+  font-style: italic;
 }

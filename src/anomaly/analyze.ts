@@ -1,6 +1,5 @@
-import { createOpenRouter } from '@openrouter/ai-sdk-provider'
-import { generateText } from 'ai'
 import type { TableSchema } from '@/db'
+import { loadAiSdk } from '@/lib/ai-sdk'
 import { schemaText } from '@/editor/ai-autocomplete/prompts'
 import type { Anomaly } from './detect'
 
@@ -17,6 +16,7 @@ export interface AnalyzeOptions {
 }
 
 export async function analyzeAnomaly(anomaly: Anomaly, options: AnalyzeOptions): Promise<string> {
+  const { createOpenRouter, generateText } = await loadAiSdk()
   const client = createOpenRouter({ apiKey: options.apiKey })
   const metricsText = Object.entries(anomaly.metrics)
     .map(([k, v]) => `- ${k}: ${v}`)

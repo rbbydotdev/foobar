@@ -20,4 +20,9 @@ export default defineConfig({
   worker: {
     format: 'es',
   },
+  build: {
+    // The SQLite WASM glue + CodeMirror push the main chunk past the default
+    // 500 kB hint; faker and the AI SDK are already split into lazy chunks.
+    chunkSizeWarningLimit: 1200,
+  },
 })
