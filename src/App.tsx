@@ -5,6 +5,7 @@ import { ResultsTable } from '@/query/ResultsTable'
 import { SqlEditor } from '@/editor/SqlEditor'
 import { useAiAutocompleteExtension } from '@/editor/useAiAutocompleteExtension'
 import { AiSettings } from '@/providers/components/AiSettings'
+import { AnomalyWatcher } from '@/anomaly/AnomalyWatcher'
 import { useImportSharedProvider } from '@/providers/useImportSharedProvider'
 import { Button } from '@/components/ui/button'
 
@@ -56,6 +57,7 @@ export default function App() {
           <Button size="sm" variant="outline" disabled={busy} onClick={() => void seedMore(2000)}>
             Seed +2k
           </Button>
+          <AnomalyWatcher />
           <AiSettings />
         </div>
       </header>
