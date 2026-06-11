@@ -3,6 +3,8 @@ import { SAMPLE_QUERY, useDb } from '@/db'
 import { useSqlRunner } from '@/query/useSqlRunner'
 import { ResultsTable } from '@/query/ResultsTable'
 import { SqlEditor } from '@/editor/SqlEditor'
+import { AiSettings } from '@/providers/components/AiSettings'
+import { useImportSharedProvider } from '@/providers/useImportSharedProvider'
 import { Button } from '@/components/ui/button'
 
 export default function App() {
@@ -17,6 +19,8 @@ export default function App() {
 
   const [sql, setSql] = useState(SAMPLE_QUERY)
   const runner = useSqlRunner(sql)
+
+  useImportSharedProvider()
 
   useEffect(() => {
     void init()
@@ -34,7 +38,7 @@ export default function App() {
           </span>
         </div>
         <div className="flex items-center gap-3 text-xs text-muted-foreground">
-          <span data-testid="db-status">
+          <span data-testid="db-status" className="hidden sm:inline">
             db: {status}
             {status === 'ready' && (
               <>
@@ -50,6 +54,7 @@ export default function App() {
           <Button size="sm" variant="outline" disabled={busy} onClick={() => void seedMore(2000)}>
             Seed +2k
           </Button>
+          <AiSettings />
         </div>
       </header>
 
