@@ -128,3 +128,29 @@
     @apply font-sans;
     }
 }
+
+/* CodeMirror SQL syntax token colors (theme-aware via CSS variables). */
+:root {
+  --font-mono: ui-monospace, 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace;
+  --cm-keyword: oklch(0.5 0.21 280);
+  --cm-string: oklch(0.55 0.16 150);
+  --cm-number: oklch(0.6 0.18 45);
+  --cm-function: oklch(0.55 0.2 255);
+  --cm-operator: oklch(0.6 0.13 215);
+  --cm-comment: oklch(0.6 0.02 260);
+  --cm-property: oklch(0.55 0.13 190);
+  --cm-type: oklch(0.55 0.15 220);
+  --cm-ghost: oklch(0.55 0.02 260);
+}
+
+.dark {
+  --cm-keyword: oklch(0.76 0.13 300);
+  --cm-string: oklch(0.83 0.16 145);
+  --cm-number: oklch(0.8 0.13 60);
+  --cm-function: oklch(0.74 0.13 260);
+  --cm-operator: oklch(0.82 0.11 210);
+  --cm-comment: oklch(0.58 0.03 265);
+  --cm-property: oklch(0.8 0.12 185);
+  --cm-type: oklch(0.78 0.12 220);
+  --cm-ghost: oklch(0.62 0.03 265);
+}

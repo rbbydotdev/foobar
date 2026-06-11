@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
-import type { KeyboardEvent } from 'react'
 import { SAMPLE_QUERY, useDb } from '@/db'
 import { useSqlRunner } from '@/query/useSqlRunner'
 import { ResultsTable } from '@/query/ResultsTable'
+import { SqlEditor } from '@/editor/SqlEditor'
 import { Button } from '@/components/ui/button'
 
 export default function App() {
@@ -21,13 +21,6 @@ export default function App() {
   useEffect(() => {
     void init()
   }, [init])
-
-  function onKeyDown(e: KeyboardEvent<HTMLTextAreaElement>) {
-    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
-      e.preventDefault()
-      runner.runExplicit()
-    }
-  }
 
   const pendingWrite = runner.kind === 'write' && !runner.result && !runner.error
 
@@ -68,14 +61,14 @@ export default function App() {
         )}
 
         <div className="flex flex-col gap-1.5">
-          <textarea
-            value={sql}
-            onChange={(e) => setSql(e.target.value)}
-            onKeyDown={onKeyDown}
-            spellCheck={false}
-            rows={6}
-            className="w-full resize-y rounded-md border bg-card p-3 font-mono text-sm outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
-          />
+          <div className="overflow-hidden rounded-md border bg-card focus-within:ring-[3px] focus-within:ring-ring/50">
+            <SqlEditor
+              value={sql}
+              onChange={setSql}
+              onRun={runner.runExplicit}
+              schema={schema}
+            />
+          </div>
           <div className="flex items-center justify-between text-xs text-muted-foreground">
             <span>
               {pendingWrite ? (
