@@ -10,6 +10,7 @@ export {
   persist,
   resetAndSeed,
   seedMore,
+  injectScenario,
   clearAll,
 } from './sqlite'
 export type { InitResult, SqlDiagnostic } from './sqlite'

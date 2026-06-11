@@ -18,12 +18,18 @@ Rules:
 - Prefer a complete, runnable statement over a tiny fragment.
 - If nothing useful should be inserted, output nothing.`
 
+function datasetNotes(hints: string[]): string {
+  if (hints.length === 0) return ''
+  return `\n\nDataset notes (the user is likely investigating these — bias completions toward relevant queries):\n${hints.map((h) => `- ${h}`).join('\n')}`
+}
+
 export function buildCompletionPrompt(
   context: InlineAutocompleteContext,
   schema: TableSchema[],
+  hints: string[] = [],
 ): { system: string; prompt: string } {
   const prompt = `SQLite schema:
-${schemaText(schema)}
+${schemaText(schema)}${datasetNotes(hints)}
 
 Complete the SQL at <CURSOR>:
 ${context.prefix}<CURSOR>${context.suffix}`
@@ -38,9 +44,10 @@ Use only the tables and columns in the provided schema.`
 export function buildEditPrompt(
   context: InlineEditContext,
   schema: TableSchema[],
+  hints: string[] = [],
 ): { system: string; prompt: string } {
   const prompt = `SQLite schema:
-${schemaText(schema)}
+${schemaText(schema)}${datasetNotes(hints)}
 
 Code before selection:
 ${context.codeBefore}

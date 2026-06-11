@@ -102,7 +102,7 @@ export function AnomalyWatcher() {
         disabled={dbStatus !== 'ready'}
       >
         <TriangleAlert className={cn('size-3.5', count > 0 && 'text-amber-500')} />
-        Anomalies
+        Analyze
         <Badge variant={count > 0 ? 'destructive' : 'secondary'} className="h-4 px-1.5 text-[10px]">
           {count}
         </Badge>

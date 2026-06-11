@@ -9,6 +9,8 @@ export interface OpenRouterCompletionOptions {
   model: string
   /** Read lazily so completions always use the current schema. */
   getSchema: () => TableSchema[]
+  /** Active anomaly-scenario hints to steer completions, read lazily. */
+  getAnomalyHints?: () => string[]
 }
 
 function sanitize(raw: string, maxLen: number): string {
@@ -38,7 +40,11 @@ export function createOpenRouterCompletionProvider(
 
     async provideInlineCompletions(context, signal) {
       const { generateText, model } = await resolve()
-      const { system, prompt } = buildCompletionPrompt(context, options.getSchema())
+      const { system, prompt } = buildCompletionPrompt(
+        context,
+        options.getSchema(),
+        options.getAnomalyHints?.() ?? [],
+      )
       const result = await generateText({
         model,
         system,
@@ -52,7 +58,11 @@ export function createOpenRouterCompletionProvider(
 
     async provideInlineEdit(context, signal) {
       const { generateText, model } = await resolve()
-      const { system, prompt } = buildEditPrompt(context, options.getSchema())
+      const { system, prompt } = buildEditPrompt(
+        context,
+        options.getSchema(),
+        options.getAnomalyHints?.() ?? [],
+      )
       const result = await generateText({
         model,
         system,

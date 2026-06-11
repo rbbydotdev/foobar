@@ -187,6 +187,16 @@ export async function seedMore(count: number): Promise<number> {
   return getRowCount()
 }
 
+/** Injects an anomaly scenario's rows into the table. Returns rows added. */
+export async function injectScenario(id: string): Promise<number> {
+  const { INJECTORS } = await import('@/anomaly/inject')
+  const injector = INJECTORS[id]
+  if (!injector) return 0
+  const added = injector(requireDb(), Date.now())
+  await persist()
+  return added
+}
+
 export async function clearAll(): Promise<number> {
   const d = requireDb()
   d.exec('DROP TABLE IF EXISTS requests;')
