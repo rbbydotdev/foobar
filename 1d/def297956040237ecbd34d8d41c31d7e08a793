@@ -1,0 +1,35 @@
+src/App.tsx
+  s_0c3d19a4546f2b::t_d6b3311994f8cc 23
+  s_0c3d19a4546f2b::t_7b14e9621cdf87 77
+  s_0c3d19a4546f2b::t_059ad4685e63eb 6
+src/editor/ai-autocomplete/provider.ts
+  s_0c3d19a4546f2b::t_e4ed205fcfab74 1-60
+src/editor/ai-autocomplete/types.ts
+  s_0c3d19a4546f2b::t_0d7359e6d944ac 1-96
+src/editor/ai-autocomplete/codemirror.ts
+  s_0c3d19a4546f2b::t_0d7359e6d944ac 1-801
+src/editor/useAiAutocompleteExtension.ts
+  s_0c3d19a4546f2b::t_c2752f6e1d5023 1-40
+src/editor/ai-autocomplete/prompts.ts
+  s_0c3d19a4546f2b::t_f85af60d166b17 1-54
+src/editor/ai-autocomplete/index.ts
+  s_0c3d19a4546f2b::t_e374c43f3b54f3 1-14
+src/editor/ai-autocomplete/cache.ts
+  s_0c3d19a4546f2b::t_0d7359e6d944ac 1-95
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "1ddef297956040237ecbd34d8d41c31d7e08a793",
+  "prompts": {},
+  "sessions": {
+    "s_0c3d19a4546f2b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f610e517-a70e-4221-b0a9-7d6370928669",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Robert Polana <robertapolana@gmail.com>"
+    }
+  }
+}
