@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/dialog'
 import { cn } from '@/lib/utils'
 import { detectAnomalies } from './detect'
-import type { Anomaly } from './detect'
+import type { DataAnomaly } from './detect'
 import { analyzeAnomaly } from './analyze'
 
 interface AnalysisState {
@@ -29,7 +29,7 @@ export function AnomalyWatcher() {
   const dataVersion = useDb((s) => s.dataVersion)
   const schema = useDb((s) => s.schema)
 
-  const [anomalies, setAnomalies] = useState<Anomaly[]>([])
+  const [anomalies, setAnomalies] = useState<DataAnomaly[]>([])
   const [analyses, setAnalyses] = useState<Record<string, AnalysisState>>({})
   const [open, setOpen] = useState(false)
   const autoRanRef = useRef<Set<string>>(new Set())
@@ -53,7 +53,7 @@ export function AnomalyWatcher() {
   }, [mode, dbStatus, dataVersion])
 
   const runAnalysis = useCallback(
-    async (anomaly: Anomaly) => {
+    async (anomaly: DataAnomaly) => {
       if (!apiKey || !model) {
         setAnalyses((a) => ({
           ...a,

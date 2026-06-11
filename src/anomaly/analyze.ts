@@ -1,7 +1,7 @@
 import type { TableSchema } from '@/db'
 import { loadAiSdk } from '@/lib/ai-sdk'
 import { schemaText } from '@/editor/ai-autocomplete/prompts'
-import type { Anomaly } from './detect'
+import type { DataAnomaly } from './detect'
 
 const SYSTEM = `You are an SRE assistant analyzing web-request analytics stored in a SQLite table.
 Given an anomaly and sample rows, respond concisely in markdown with:
@@ -15,7 +15,7 @@ export interface AnalyzeOptions {
   schema: TableSchema[]
 }
 
-export async function analyzeAnomaly(anomaly: Anomaly, options: AnalyzeOptions): Promise<string> {
+export async function analyzeAnomaly(anomaly: DataAnomaly, options: AnalyzeOptions): Promise<string> {
   const { createOpenRouter, generateText } = await loadAiSdk()
   const client = createOpenRouter({ apiKey: options.apiKey })
   const metricsText = Object.entries(anomaly.metrics)

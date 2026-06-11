@@ -2,7 +2,8 @@ import { useMemo } from 'react'
 import type { Extension } from '@codemirror/state'
 import { useDb } from '@/db'
 import { useActiveProvider, useProviders } from '@/providers/store'
-import { useScenarios } from '@/anomaly/scenario-store'
+import { useAnomaly } from '@/anomaly/store'
+import { getDataAnomalies } from '@/anomaly/detect'
 import { aiAutocomplete, createOpenRouterCompletionProvider } from './ai-autocomplete'
 
 /**
@@ -25,7 +26,8 @@ export function useAiAutocompleteExtension(): Extension | undefined {
       apiKey,
       model,
       getSchema: () => useDb.getState().schema,
-      getAnomalyHints: () => useScenarios.getState().activeHints(),
+      getAnomalyHints: () =>
+        useAnomaly.getState().steerAutocomplete ? getDataAnomalies().map((a) => a.hint) : [],
     })
     return aiAutocomplete({
       provider,

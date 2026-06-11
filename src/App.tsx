@@ -7,8 +7,7 @@ import { SqlEditor } from '@/editor/SqlEditor'
 import { useAiAutocompleteExtension } from '@/editor/useAiAutocompleteExtension'
 import { AiSettings } from '@/providers/components/AiSettings'
 import { AnomalyWatcher } from '@/anomaly/AnomalyWatcher'
-import { AnomalyScenarios } from '@/anomaly/AnomalyScenarios'
-import { useScenarios } from '@/anomaly/scenario-store'
+import { AnomalyPanel } from '@/anomaly/AnomalyPanel'
 import { SharedProviderImporter } from '@/providers/components/SharedProviderImporter'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { Button } from '@/components/ui/button'
@@ -115,10 +114,7 @@ export default function App() {
             size="sm"
             variant="outline"
             disabled={busy}
-            onClick={() => {
-              useScenarios.getState().reset()
-              void reset(5000)
-            }}
+            onClick={() => void reset(5000)}
           >
             Reset
           </Button>
@@ -126,7 +122,7 @@ export default function App() {
             Seed +2k
           </Button>
           <Separator orientation="vertical" className="mx-0.5 !h-5" />
-          <AnomalyScenarios />
+          <AnomalyPanel />
           <AnomalyWatcher />
           <AiSettings />
           <ThemeToggle />
