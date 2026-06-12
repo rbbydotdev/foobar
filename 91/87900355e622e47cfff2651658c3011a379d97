@@ -1,0 +1,19 @@
+src/anomaly/AnomalyWatcher.tsx
+  s_0c3d19a4546f2b::t_23adde7410a8f8 26-27
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "9187900355e622e47cfff2651658c3011a379d97",
+  "prompts": {},
+  "sessions": {
+    "s_0c3d19a4546f2b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f610e517-a70e-4221-b0a9-7d6370928669",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Robert Polana <robertapolana@gmail.com>"
+    }
+  }
+}
