@@ -23,6 +23,8 @@ interface AnalysisState {
 }
 
 export function AnomalyWatcher() {
+  // Neutered for now — hidden from the header (code kept intact below).
+  return null
   const active = useActiveProvider()
   const dbStatus = useDb((s) => s.status)
   const dataVersion = useDb((s) => s.dataVersion)
