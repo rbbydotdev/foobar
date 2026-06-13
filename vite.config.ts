@@ -5,8 +5,8 @@ import tailwindcss from '@tailwindcss/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
-  // Served from https://rbby.dev/foobar-clickhouse/ on GitHub Pages.
-  base: '/foobar-clickhouse/',
+  // Served from https://rbby.dev/foobar/ on GitHub Pages.
+  base: '/foobar/',
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
