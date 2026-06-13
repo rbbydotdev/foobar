@@ -1,0 +1,19 @@
+vite.config.ts
+  s_0c3d19a4546f2b::t_87bfa7a5f5d9c8 8-9
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "6a8c9c8cadcec29c8c2092a988aabd24f778ea4b",
+  "prompts": {},
+  "sessions": {
+    "s_0c3d19a4546f2b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f610e517-a70e-4221-b0a9-7d6370928669",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Robert Polana <robertapolana@gmail.com>"
+    }
+  }
+}
